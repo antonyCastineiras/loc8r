@@ -3,13 +3,12 @@ extends layout
 block content
   .row.page-header
     .col-lg-12
-      h1 Review Starcups
-
+      h1= pageHeader.title
   .row
-    .col-xs-12.col-sm-6
+    .col-xs-12.col-md-6
       form.form-horizontal(action="/location", method="get", role="form")
         .form-group
-          label.col-xs-12.col-sm-2.control-label(for="name") Name
+          label.col-xs-10.col-sm-2.control-label(for="name") Name
           .col-xs-12.col-sm-10
             input#name.form-control(name="name")
         .form-group
@@ -26,3 +25,4 @@ block content
           .col-sm-10
             textarea#review.form-control(name="review", rows="5")
         button.btn.btn-default.pull-right Add my review
+    .col-xs-12.col-md-4
