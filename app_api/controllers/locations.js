@@ -27,7 +27,7 @@ var formatGeoResponse = function(doc) {
 	return {
 		distance: theEarth.getDistanceFromRads(doc.dis),
 		name: doc.obj.name,
-		address: doc.obj.address,
+		address: doc.obj.address,	
 		rating: doc.obj.rating,
 		facilities: doc.object.facilities,
 		_id: doc.obj._id
@@ -44,16 +44,15 @@ module.exports.locationsListByDistance = function(req, res) {
 	};
 	var geoOptions = {
 		spherical: true,
-		maxDistance: maxDistance,
-		num: 10,
-		near: point
+		maxDistance: 200000,
+		limit: 10
 	};
 
-	Loc.geoNear(geoOptions, function(err, results, stats) {
+	Loc.geoNear(point, geoOptions, function(err, results, stats) {
 		var locations = [];
-		console.log(err, results,stats)
 		results.forEach( function(doc) {
-			formatGeoResponse(doc);
+			console.log(doc)
+			locations.push(formatGeoResponse(doc));
 		});
 		sendJsonResponse(res, 200, locations)
 	});
