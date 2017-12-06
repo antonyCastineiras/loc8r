@@ -54,11 +54,11 @@ module.exports.locationsListByDistance = function(req, res) {
 	};
 	var geoOptions = {
 		spherical: true,
-		maxDistance: 2000000,
+		maxDistance: maxDistance,
 		limit: 10
 	};
 
-	if ( !lng || !lat ) {
+	if ( ( !lng && lng!==0 ) || ( !lat && lat!==0 ) ) {
 		sendJsonResponse(res, 404, { "message": "lattiude and longitude query parameters are requried"});
 		return;
 	}  
@@ -68,16 +68,23 @@ module.exports.locationsListByDistance = function(req, res) {
 		if(err) {
 			sendJsonResponse(res, 404, err);
 		} else {
-			for (result in results) {
-				locations.push(results[result])
-			}
+			results.forEach( function(doc) {
+				locations.push({
+					distance: theEarth.getDistanceFromRads(doc.dis),
+					name: doc.obj.name,
+					address: doc.obj.address,
+					rating: doc.obj.rating,
+					facilities: doc.obj.facilities,
+					_id: doc.obj._id
+				})
+			})
 			sendJsonResponse(res, 200, locations);
+			console.log(locations)
 		}
 	});
 }
 // CREATE
 module.exports.locationsCreate = function(req, res) {
-	console.log(req.body)
 	Loc.create( locationFromParams(req.body), function(err, location) {
 		if(err) {
 			sendJsonResponse(res, 400, err)
